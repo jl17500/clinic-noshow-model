@@ -1,0 +1,4 @@
+__pycache__/
+.venv/
+# assignment brief, not for the public repo
+assignment.md

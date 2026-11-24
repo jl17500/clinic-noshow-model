@@ -1,0 +1,275 @@
+{
+  "data": {
+    "rows": 400,
+    "columns": 8,
+    "no_shows": 91,
+    "no_show_rate": 0.2275,
+    "train_rows": 280,
+    "train_no_shows": 64,
+    "test_rows": 120,
+    "test_no_shows": 27
+  },
+  "model": {
+    "features_offered": [
+      "sms_reminder",
+      "prior_no_shows",
+      "lead_time_days",
+      "new_patient",
+      "distance_miles",
+      "age"
+    ],
+    "max_depth": 2,
+    "min_leaf": 10,
+    "no_show_weight": 2.0,
+    "break_even": 0.3333333333333333,
+    "features_used": [
+      "sms_reminder",
+      "prior_no_shows"
+    ],
+    "nodes": [
+      {
+        "id": 0,
+        "left": 1,
+        "right": 4,
+        "leaf": false,
+        "feature": "sms_reminder",
+        "threshold": 0.5
+      },
+      {
+        "id": 1,
+        "left": 2,
+        "right": 3,
+        "leaf": false,
+        "feature": "prior_no_shows",
+        "threshold": 0.5
+      },
+      {
+        "id": 2,
+        "left": -1,
+        "right": -1,
+        "leaf": true,
+        "n": 56,
+        "no_shows": 10,
+        "rate": 0.17857142857142858,
+        "decision": "hold",
+        "leaf_number": 1,
+        "path": [
+          "no text reminder",
+          "no past no-shows"
+        ]
+      },
+      {
+        "id": 3,
+        "left": -1,
+        "right": -1,
+        "leaf": true,
+        "n": 62,
+        "no_shows": 39,
+        "rate": 0.6290322580645161,
+        "decision": "overbook",
+        "leaf_number": 2,
+        "path": [
+          "no text reminder",
+          "1+ past no-shows"
+        ]
+      },
+      {
+        "id": 4,
+        "left": 5,
+        "right": 6,
+        "leaf": false,
+        "feature": "prior_no_shows",
+        "threshold": 1.5
+      },
+      {
+        "id": 5,
+        "left": -1,
+        "right": -1,
+        "leaf": true,
+        "n": 139,
+        "no_shows": 5,
+        "rate": 0.03597122302158273,
+        "decision": "hold",
+        "leaf_number": 3,
+        "path": [
+          "text reminder sent",
+          "0 or 1 past no-shows"
+        ]
+      },
+      {
+        "id": 6,
+        "left": -1,
+        "right": -1,
+        "leaf": true,
+        "n": 23,
+        "no_shows": 10,
+        "rate": 0.43478260869565216,
+        "decision": "overbook",
+        "leaf_number": 4,
+        "path": [
+          "text reminder sent",
+          "2+ past no-shows"
+        ]
+      }
+    ],
+    "rules": "|--- sms_reminder <= 0.50\n|   |--- prior_no_shows <= 0.50\n|   |   |--- class: 0\n|   |--- prior_no_shows >  0.50\n|   |   |--- class: 1\n|--- sms_reminder >  0.50\n|   |--- prior_no_shows <= 1.50\n|   |   |--- class: 0\n|   |--- prior_no_shows >  1.50\n|   |   |--- class: 1\n"
+  },
+  "test": {
+    "baseline": {
+      "tn": 93,
+      "fp": 0,
+      "fn": 27,
+      "tp": 0,
+      "n": 120,
+      "accuracy": 0.775,
+      "precision": null,
+      "recall": 0.0,
+      "value_total": -3240,
+      "value_per_appt": -27.0
+    },
+    "v1": {
+      "tn": 75,
+      "fp": 18,
+      "fn": 6,
+      "tp": 21,
+      "n": 120,
+      "accuracy": 0.8,
+      "precision": 0.5384615384615384,
+      "recall": 0.7777777777777778,
+      "value_total": -1800,
+      "value_per_appt": -15.0
+    }
+  },
+  "v1_train_accuracy": 0.8178571428571428,
+  "baseline_train_accuracy": 0.7714285714285715,
+  "upcoming": {
+    "D": {
+      "appointment": {
+        "lead_time_days": 21,
+        "prior_no_shows": 1,
+        "age": 27,
+        "distance_miles": 9.5,
+        "sms_reminder": 0,
+        "new_patient": 1,
+        "appointment_hour": 15
+      },
+      "leaf": 2,
+      "path": [
+        "no text reminder",
+        "1+ past no-shows"
+      ],
+      "decision": "overbook"
+    },
+    "E": {
+      "appointment": {
+        "lead_time_days": 3,
+        "prior_no_shows": 0,
+        "age": 61,
+        "distance_miles": 2.0,
+        "sms_reminder": 1,
+        "new_patient": 0,
+        "appointment_hour": 9
+      },
+      "leaf": 3,
+      "path": [
+        "text reminder sent",
+        "0 or 1 past no-shows"
+      ],
+      "decision": "hold"
+    }
+  },
+  "value": {
+    "appts_per_day": 20,
+    "clinic_days": 250,
+    "appts_per_year": 5000,
+    "baseline_per_year": -135000.0,
+    "v1_per_year": -75000.0,
+    "saving_per_appt": 12.0,
+    "saving_per_year": 60000.0,
+    "saving_per_appt_95": [
+      2.5,
+      21.5
+    ],
+    "loss_cut": 0.4444444444444444
+  },
+  "cv_depth_check": [
+    {
+      "depth": 1,
+      "tn": 150,
+      "fp": 66,
+      "fn": 23,
+      "tp": 41,
+      "n": 280,
+      "accuracy": 0.6821428571428572,
+      "precision": 0.38317757009345793,
+      "recall": 0.640625,
+      "value_total": -6720,
+      "value_per_appt": -24.0
+    },
+    {
+      "depth": 2,
+      "tn": 187,
+      "fp": 29,
+      "fn": 22,
+      "tp": 42,
+      "n": 280,
+      "accuracy": 0.8178571428571428,
+      "precision": 0.5915492957746479,
+      "recall": 0.65625,
+      "value_total": -4380,
+      "value_per_appt": -15.642857142857142
+    },
+    {
+      "depth": 3,
+      "tn": 176,
+      "fp": 40,
+      "fn": 22,
+      "tp": 42,
+      "n": 280,
+      "accuracy": 0.7785714285714286,
+      "precision": 0.5121951219512195,
+      "recall": 0.65625,
+      "value_total": -5040,
+      "value_per_appt": -18.0
+    },
+    {
+      "depth": 4,
+      "tn": 171,
+      "fp": 45,
+      "fn": 21,
+      "tp": 43,
+      "n": 280,
+      "accuracy": 0.7642857142857142,
+      "precision": 0.48863636363636365,
+      "recall": 0.671875,
+      "value_total": -5220,
+      "value_per_appt": -18.642857142857142
+    },
+    {
+      "depth": 5,
+      "tn": 178,
+      "fp": 38,
+      "fn": 24,
+      "tp": 40,
+      "n": 280,
+      "accuracy": 0.7785714285714286,
+      "precision": 0.5128205128205128,
+      "recall": 0.625,
+      "value_total": -5160,
+      "value_per_appt": -18.428571428571427
+    },
+    {
+      "depth": "baseline",
+      "tn": 216,
+      "fp": 0,
+      "fn": 64,
+      "tp": 0,
+      "n": 280,
+      "accuracy": 0.7714285714285715,
+      "precision": null,
+      "recall": 0.0,
+      "value_total": -7680,
+      "value_per_appt": -27.428571428571427
+    }
+  ]
+}
